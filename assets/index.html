@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>记事簿</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ====== Custom Title Bar ====== -->
+<div id="titlebar" class="titlebar">
+  <div class="titlebar-drag" id="titlebarDrag">
+    <span class="titlebar-icon">📓</span>
+    <span class="titlebar-title">记事簿</span>
+  </div>
+  <div class="titlebar-actions">
+    <button class="titlebar-btn" id="btnPin" title="置顶" data-tooltip="置顶">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="12" y1="17" x2="12" y2="22"/>
+        <path d="M5 17h14v-1.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V6h1a2 2 0 0 0 0-4H8a2 2 0 0 0 0 4h1v4.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24Z"/>
+      </svg>
+    </button>
+    <button class="titlebar-btn" id="btnMin" title="最小化">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="5" y1="12" x2="19" y2="12"/>
+      </svg>
+    </button>
+    <button class="titlebar-btn titlebar-btn-close" id="btnClose" title="关闭">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+      </svg>
+    </button>
+  </div>
+</div>
+
+<!-- ====== Tab Navigation ====== -->
+<nav class="tabnav" id="tabnav">
+  <button class="tabnav-item active" data-tab="notes">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/>
+      <rect x="8" y="2" width="8" height="4" rx="1" ry="1"/>
+    </svg>
+    <span>笔记</span>
+  </button>
+  <button class="tabnav-item" data-tab="reminders">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="10"/>
+      <polyline points="12 6 12 12 16 14"/>
+    </svg>
+    <span>提醒</span>
+  </button>
+  <button class="tabnav-item" data-tab="settings">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="3"/>
+      <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+    </svg>
+    <span>设置</span>
+  </button>
+</nav>
+
+<!-- ====== Main Content Area ====== -->
+<main class="content" id="content">
+
+  <!-- ── Notes Tab ── -->
+  <section class="view active" id="view-notes">
+    <div class="notes-toolbar">
+      <div class="search-box glass">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" id="searchInput" placeholder="搜索笔记... (Ctrl+F)" autocomplete="off" aria-label="搜索笔记">
+        <button class="search-clear" id="searchClear" title="清除搜索" type="button" style="display:none">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <div class="notes-stats" id="notesStats"></div>
+    </div>
+    <div class="notes-list" id="notesList">
+      <!-- Notes rendered here -->
+    </div>
+    <div class="empty-state" id="notesEmpty">
+      <div class="empty-icon">📝</div>
+      <p class="empty-title">还没有笔记</p>
+      <p class="empty-desc">点击右下角的 + 按钮创建第一条笔记</p>
+    </div>
+    <button class="fab glass" id="btnNewNote" title="新建笔记">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+        <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+      </svg>
+    </button>
+  </section>
+
+  <!-- ── Reminders Tab ── -->
+  <section class="view" id="view-reminders">
+    <div class="section-header">
+      <h2>定时提醒</h2>
+      <button class="btn-glass btn-sm" id="btnNewReminder">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        添加提醒
+      </button>
+    </div>
+    <div class="reminders-list" id="remindersList">
+      <!-- Reminders rendered here -->
+    </div>
+    <div class="empty-state" id="remindersEmpty">
+      <div class="empty-icon">⏰</div>
+      <p class="empty-title">还没有提醒</p>
+      <p class="empty-desc">添加定时提醒，到时间会通知你</p>
+    </div>
+  </section>
+
+  <!-- ── Settings Tab ── -->
+  <section class="view" id="view-settings">
+    <div class="section-header">
+      <h2>设置</h2>
+    </div>
+    <div class="settings-list">
+      <div class="setting-item glass" id="settingTheme">
+        <div class="setting-info">
+          <span class="setting-label">界面风格</span>
+          <span class="setting-desc">切换字体和背景风格</span>
+        </div>
+        <select class="editor-select" id="themeSelect" style="min-width:110px">
+          <option value="default">白色磨砂</option>
+          <option value="dark">暗黑磨砂</option>
+          <option value="warm">暖米色</option>
+          <option value="minimal">极简白</option>
+        </select>
+      </div>
+      <div class="setting-item glass" id="settingAlwaysOnTop">
+        <div class="setting-info">
+          <span class="setting-label" id="labelOnTop">窗口置顶</span>
+          <span class="setting-desc">保持窗口始终在其他窗口前面</span>
+        </div>
+        <label class="toggle">
+          <input type="checkbox" id="toggleOnTop" aria-labelledby="labelOnTop">
+          <span class="toggle-track"></span>
+        </label>
+      </div>
+      <div class="setting-item glass" id="settingAutoStart">
+        <div class="setting-info">
+          <span class="setting-label" id="labelAutoStart">开机自启</span>
+          <span class="setting-desc">系统启动时自动运行记事簿</span>
+        </div>
+        <label class="toggle">
+          <input type="checkbox" id="toggleAutoStart" aria-labelledby="labelAutoStart">
+          <span class="toggle-track"></span>
+        </label>
+      </div>
+      <div class="setting-item glass" id="settingCloseToTray">
+        <div class="setting-info">
+          <span class="setting-label" id="labelCloseTray">最小化到任务栏</span>
+          <span class="setting-desc">关闭窗口时最小化到任务栏而不是退出</span>
+        </div>
+        <label class="toggle">
+          <input type="checkbox" id="toggleCloseToTray" aria-labelledby="labelCloseTray">
+          <span class="toggle-track"></span>
+        </label>
+      </div>
+    </div>
+    <div class="about-section glass">
+      <div class="about-icon">📓</div>
+      <h3>记事簿</h3>
+      <p>液态玻璃风格 · 简约记事</p>
+      <p class="about-version">v1.0.0</p>
+    </div>
+  </section>
+</main>
+
+<!-- ====== Note Editor Overlay ====== -->
+<div class="editor-overlay" id="editorOverlay">
+  <div class="editor-panel glass-heavy" id="editorPanel">
+    <div class="editor-header">
+      <button class="btn-glass btn-icon" id="btnEditorBack">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+      </button>
+      <span class="editor-title" id="editorTitle">新建笔记</span>
+      <div class="editor-header-actions">
+        <button class="btn-glass btn-icon" id="btnEditorDelete" title="删除">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+        </button>
+        <button class="btn-glass btn-icon" id="btnEditorPin" title="置顶">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="17" x2="12" y2="22"/><path d="M5 17h14v-1.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V6h1a2 2 0 0 0 0-4H8a2 2 0 0 0 0 4h1v4.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24Z"/></svg>
+        </button>
+      </div>
+    </div>
+    <div class="editor-body">
+      <input type="text" class="editor-input-title" id="editorInputTitle" placeholder="标题..." maxlength="200">
+      <div class="editor-meta">
+        <select class="editor-select" id="editorCategory">
+          <option value="">📂 分类</option>
+          <option value="工作">💼 工作</option>
+          <option value="个人">👤 个人</option>
+          <option value="学习">📚 学习</option>
+          <option value="生活">🏠 生活</option>
+          <option value="其他">📌 其他</option>
+        </select>
+        <select class="editor-select" id="editorPriority">
+          <option value="0">⚪ 无优先级</option>
+          <option value="1">🟢 低优先级</option>
+          <option value="2">🟠 中优先级</option>
+          <option value="3">🔴 高优先级</option>
+        </select>
+      </div>
+      <textarea class="editor-textarea" id="editorTextarea" placeholder="写点什么..." rows="6"></textarea>
+    </div>
+    <div class="editor-footer">
+      <span class="editor-hint" id="editorHint"></span>
+      <button class="btn-glass btn-primary" id="btnEditorSave">保存</button>
+    </div>
+  </div>
+</div>
+
+<!-- ====== Reminder Form Overlay ====== -->
+<div class="editor-overlay" id="reminderOverlay">
+  <div class="editor-panel glass-heavy" id="reminderPanel">
+    <div class="editor-header">
+      <button class="btn-glass btn-icon" id="btnReminderBack">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+      </button>
+      <span class="editor-title">添加提醒</span>
+      <div style="width:32px"></div>
+    </div>
+    <div class="editor-body">
+      <input type="text" class="editor-input-title" id="reminderInputTitle" placeholder="提醒标题..." maxlength="200">
+      <textarea class="editor-textarea" id="reminderTextarea" placeholder="描述（可选）..." rows="3"></textarea>
+      <div class="form-group">
+        <label class="form-label">提醒时间</label>
+        <div class="datetime-row">
+          <input type="date" class="editor-select" id="reminderDate">
+          <input type="time" class="editor-select" id="reminderTime">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">重复</label>
+        <select class="editor-select" id="reminderRepeat">
+          <option value="0">不重复</option>
+          <option value="5">每 5 分钟</option>
+          <option value="15">每 15 分钟</option>
+          <option value="30">每 30 分钟</option>
+          <option value="60">每 1 小时</option>
+          <option value="1440">每天</option>
+          <option value="10080">每周</option>
+        </select>
+      </div>
+    </div>
+    <div class="editor-footer">
+      <span class="editor-hint"></span>
+      <button class="btn-glass btn-primary" id="btnReminderSave">保存提醒</button>
+    </div>
+  </div>
+</div>
+
+<!-- ====== Toast Notification ====== -->
+<div class="toast-container" id="toastContainer"></div>
+
+<script src="qrc:///qtwebchannel/qwebchannel.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
